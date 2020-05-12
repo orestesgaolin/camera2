@@ -669,9 +669,6 @@ public class Camera {
   void setFlash(int flash) {
     Log.d(TAG, "Setting flash to " + flash);
 
-    if (mFlash == flash) {
-      return;
-    }
     int saved = mFlash;
     mFlash = flash;
     Log.d(TAG, "Current flash is " + mFlash);
