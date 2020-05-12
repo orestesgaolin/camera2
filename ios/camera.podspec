@@ -3,8 +3,8 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'camera'
-  s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
+  s.version          = '0.0.2'
+  s.summary          = 'Camera plugin for iOS'
   s.description      = <<-DESC
 A new flutter plugin project.
                        DESC
