@@ -161,9 +161,9 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
           }
           break;
         }
+        
       case "setFlashMode": {
         try {
-          Log.d("TAG",call.argument("flashMode").toString());
           camera.setFlash((int) call.argument("flashMode"));
           result.success(null);
         } catch (Exception e){
@@ -171,6 +171,7 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
         break;
       }
+
       case "hasFlash":
       {
         result.success(hasFlash());
