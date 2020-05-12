@@ -678,11 +678,11 @@ public class Camera {
     if (mPreviewRequestBuilder != null) {
       updateFlash();
       if (mCaptureSession != null) {
-        // Starting repeating request causes flash to flash on Samsung devices
         try {
-          mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(),
-          mCaptureCallback, null);
+          mCaptureSession.stopRepeating();
+          mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), mCaptureCallback, null);
         } catch (CameraAccessException e) {
+          Log.e(TAG, "Failed to set flash.", e);
           mFlash = saved; // Revert
         }
       }
@@ -926,6 +926,7 @@ public class Camera {
 
   public boolean focusToPoint(double offsetX, double offsetY) throws CameraAccessException {
     // Disable auto focus
+    Log.i(TAG, "Focus to point, disable autofocus");
     mAutoFocus = false;
 
     final Rect sensorArraySize = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
@@ -972,8 +973,8 @@ public class Camera {
     try {
       mCaptureSession.stopRepeating();
     } catch (CameraAccessException e) {
-      Log.d(TAG, "BABAB", e);
-      Log.e(TAG, "Failed to manual focus.", e);
+      Log.d(TAG, "CameraAccessException", e);
+      Log.e(TAG, "Failed to stop capture seesion and set manual focus.", e);
     }
 
     // cancel any existing AF trigger (repeated touches, etc.)
@@ -990,14 +991,11 @@ public class Camera {
     mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
     mPreviewRequestBuilder.setTag("FOCUS_TAG"); // we'll capture this later for resuming the preview
 
-    Log.i("Test", "Test");
-
     // then we ask for a single request (not repeating!)
     mCaptureSession.capture(mPreviewRequestBuilder.build(), captureCallbackHandler, null);
     mManualFocusEngaged = true;
 
     return true;
-
   }
 
   public void zoom(double step) throws CameraAccessException {
