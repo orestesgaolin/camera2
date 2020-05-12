@@ -702,7 +702,9 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
   return ([device hasFlash] && [device hasFlash]);
 }
 - (void)setFlashMode:(int)flashMode {
+  [_captureDevice lockForConfiguration:nil];
   [self setFlashMode:flashMode level:1.0];
+  [_captureDevice unlockForConfiguration];
 }
 
 - (void)setFlashMode:(int)flashMode level:(float)level {
