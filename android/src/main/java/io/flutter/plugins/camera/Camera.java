@@ -513,24 +513,24 @@ public class Camera {
 
         switch (mFlash) {
           case Constants.FLASH_OFF:
-            Log.d(TAG, "Flash is off");
+            Log.d(TAG, "Flash is off during capture");
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
             captureBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
             break;
           case Constants.FLASH_ON:
-            Log.d(TAG, "Flash is on");
+            Log.d(TAG, "Flash is on during capture");
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH);
             captureBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
             break;
           case Constants.FLASH_TORCH:
-            Log.d(TAG, "Flash is set to torch");
+            Log.d(TAG, "Flash is set to torch during capture");
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
             captureBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
             break;
           case Constants.FLASH_AUTO:
-            Log.d(TAG, "Flash is set to auto");
+            Log.d(TAG, "Flash is set to auto during capture");
           case Constants.FLASH_RED_EYE:
-            Log.d(TAG, "Flash is set to red eye correction");
+            Log.d(TAG, "Flash is set to red eye correction during capture");
             captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
             captureBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
             break;
@@ -679,12 +679,12 @@ public class Camera {
       updateFlash();
       if (mCaptureSession != null) {
         // Starting repeating request causes flash to flash on Samsung devices
-        // try {
-        // mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(),
-        // mCaptureCallback, null);
-        // } catch (CameraAccessException e) {
-        // mFlash = saved; // Revert
-        // }
+        try {
+          mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(),
+          mCaptureCallback, null);
+        } catch (CameraAccessException e) {
+          mFlash = saved; // Revert
+        }
       }
     }
   }
@@ -693,30 +693,31 @@ public class Camera {
    * Updates the internal state of flash to {@link #mFlash}.
    */
   void updateFlash() {
+    Log.d(TAG, "Updating flash");
     if (mFlashSupported) {
       switch (mFlash) {
         case Constants.FLASH_OFF:
-          Log.d(TAG, "Flash is off");
+          Log.d(TAG, "Flash is being set to off");
           mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
           mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
           break;
         case Constants.FLASH_ON:
-          Log.d(TAG, "Flash is on");
+          Log.d(TAG, "Flash is being set to on");
           mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH);
           mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
           break;
         case Constants.FLASH_TORCH:
-          Log.d(TAG, "Flash is set to torch");
+          Log.d(TAG, "Flash is being set to torch");
           mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
           mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
           break;
         case Constants.FLASH_AUTO:
-          Log.d(TAG, "Flash is set to auto");
+          Log.d(TAG, "Flash is being set to auto");
           mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
           mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
           break;
         case Constants.FLASH_RED_EYE:
-          Log.d(TAG, "Flash is set to red eye correction");
+          Log.d(TAG, "Flash is being set to red eye correction");
           mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
                   CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE);
           mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
@@ -745,7 +746,7 @@ public class Camera {
     if (mAutoFocus == autoFocus) {
       return;
     }
-    Log.d("AUTO FOCUS", "setAutoFocus");
+    Log.d(TAG, "setAutoFocus");
 
     mAutoFocus = autoFocus;
     if (mPreviewRequestBuilder != null) {
@@ -946,7 +947,7 @@ public class Camera {
         mManualFocusEngaged = false;
         Log.i(TAG, "Capture callback");
         if (request.getTag() == "FOCUS_TAG") {
-          Log.i("baba", "FOCUS_TAG");
+          Log.i(TAG, "FOCUS_TAG");
 
           // the focus trigger is complete -
           // resume repeating (preview surface will get frames), clear AF trigger
