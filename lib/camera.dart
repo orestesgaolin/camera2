@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
@@ -625,6 +626,10 @@ class CameraController extends ValueNotifier<CameraValue> {
 
   // Set setFlashMode on camera
   Future<void> setFlashMode(FlashMode flashMode) async {
+    if (Platform.isAndroid){
+      print('Flash disabled on Android');
+      return;
+    }
     value = value.copyWith(flashMode: flashMode);
     try {
       await _channel.invokeMethod<void>(
